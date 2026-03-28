@@ -1,24 +1,42 @@
-'use client';
+"use client";
 
-import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
+import { useEffect, useRef, type ReactNode } from "react";
+import Link from "next/link";
+import gsap from "gsap";
+import styles from "./Hero.module.css";
 
-export default function Hero() {
-  const heroRef = useRef<HTMLDivElement>(null);
+const HERO_VIDEO =
+  "/3D Animation/3D Product Animation Headphones Blender.mp4";
+
+type Props = {
+  /** In-flow site header — sits above hero copy, layered over the video. */
+  children?: ReactNode;
+};
+
+export default function Hero({ children }: Props) {
   const headlineRef = useRef<HTMLHeadingElement>(null);
-  const subheadlineRef = useRef<HTMLParagraphElement>(null);
+  const subRef = useRef<HTMLParagraphElement>(null);
+  const ctaRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
-    const tl = gsap.timeline();
-    
-    tl.fromTo(headlineRef.current, 
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 1.2, ease: "power3.out" }
-    ).fromTo(subheadlineRef.current,
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 1, ease: "power3.out" },
-      "-=0.8"
-    );
+    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    tl.fromTo(
+      headlineRef.current,
+      { opacity: 0, y: 28, filter: "blur(8px)" },
+      { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.15 },
+    )
+      .fromTo(
+        subRef.current,
+        { opacity: 0, y: 18 },
+        { opacity: 1, y: 0, duration: 0.95 },
+        "-=0.72",
+      )
+      .fromTo(
+        ctaRef.current,
+        { opacity: 0, y: 14 },
+        { opacity: 1, y: 0, duration: 0.85 },
+        "-=0.65",
+      );
 
     return () => {
       tl.kill();
@@ -26,85 +44,43 @@ export default function Hero() {
   }, []);
 
   return (
-    <section 
-      ref={heroRef} 
-      className="relative w-full h-screen flex items-center justify-center overflow-hidden"
-      style={{ minHeight: '100vh', position: 'relative' }}
-    >
-      {/* Background Video */}
-      <div 
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 0,
-          backgroundColor: '#000'
-        }}
-      >
+    <section className={styles.hero} aria-label="Introduction">
+      {children ? (
+        <div className={styles.headerSlot}>{children}</div>
+      ) : null}
+
+      <div className={styles.videoWrap} aria-hidden>
         <video
+          className={styles.video}
           autoPlay
-          loop
           muted
+          loop
           playsInline
-          style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.7 }}
+          preload="auto"
         >
-          <source src="/3D Animation/3D Product Animation Headphones Blender.mp4" type="video/mp4" />
+          <source src={HERO_VIDEO} type="video/mp4" />
         </video>
-        {/* Subtle Dark / Primary Tint Overlay */}
-        <div 
-          style={{ 
-            position: 'absolute', inset: 0, 
-            backgroundColor: 'var(--primary)', 
-            opacity: 0.1, 
-            mixBlendMode: 'overlay' 
-          }} 
-        />
-        <div 
-          style={{ 
-            position: 'absolute', inset: 0, 
-            background: 'linear-gradient(to bottom, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.8) 100%)' 
-          }} 
-        />
+        <div className={styles.scrim} />
       </div>
 
-      {/* Hero Content */}
-      <div 
-        style={{
-          position: 'relative',
-          zIndex: 10,
-          textAlign: 'center',
-          maxWidth: '800px',
-          padding: '0 2rem'
-        }}
-      >
-        <h1 
-          ref={headlineRef}
-          style={{ 
-            fontSize: 'clamp(3rem, 8vw, 6rem)', 
-            lineHeight: 1.1, 
-            marginBottom: '1.5rem',
-            color: 'var(--text-main)',
-            textShadow: '0 4px 20px rgba(0,0,0,0.5)',
-            opacity: 0 // initial state for GSAP
-          }}
-        >
-          Crafting Digital<br/><span style={{ color: 'var(--primary)' }}>Dimensions.</span>
-        </h1>
-        <p 
-          ref={subheadlineRef}
-          style={{ 
-            fontSize: 'clamp(1.1rem, 2vw, 1.5rem)', 
-            color: 'var(--text-main)', 
-            opacity: 0.8,
-            maxWidth: '600px',
-            margin: '0 auto',
-            lineHeight: 1.6
-          }}
-        >
-          Dollhouse Studios: Where Branding meets the fluid motion of 2D and 3D storytelling.
-        </p>
+      <div className={styles.body}>
+        <div className={styles.content}>
+          <h1 ref={headlineRef} className={styles.headline}>
+            Crafting Digital Dimensions.
+          </h1>
+          <p ref={subRef} className={styles.subhead}>
+            Dollhouse Studios: Where Branding meets the fluid motion of 2D and
+            3D storytelling.
+          </p>
+          <Link
+            ref={ctaRef}
+            href="/projects"
+            className={styles.cta}
+            style={{ opacity: 0 }}
+          >
+            View Projects
+          </Link>
+        </div>
       </div>
     </section>
   );

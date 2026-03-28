@@ -1,39 +1,31 @@
-import React from 'react';
-import Hero from '@/components/Hero';
-import FloatingElements from '@/components/FloatingElements';
-import ContentSection from '@/components/ContentSection';
+import SiteHeader from "@/components/SiteHeader";
+import Hero from "@/components/Hero";
+import FloatingCategoryCards, {
+  type CategoryCardConfig,
+} from "@/components/FloatingCategoryCards";
+import { CATEGORY_SLUGS, type CategorySlug } from "@/lib/categories";
+import { getCategoryPreview } from "@/lib/media";
+
+function buildCategoryConfigs(): CategoryCardConfig[] {
+  return CATEGORY_SLUGS.map((slug: CategorySlug) => {
+    const preview = getCategoryPreview(slug);
+    return {
+      slug,
+      previewUrl: preview?.url ?? null,
+      previewIsVideo: preview?.kind === "video",
+    };
+  });
+}
 
 export default function Home() {
-  const sections = [
-    {
-      title: "Identity with Intent.",
-      description: "We build brands that don't just exist—they breathe."
-    },
-    {
-      title: "Motion that Matters.",
-      description: "Specializing in high-fidelity 3D product visualization and expressive 2D character work."
-    },
-    {
-      title: "The Future of Footage.",
-      description: "Integrating AI-driven video workflows to push the boundaries of modern content creation."
-    }
-  ];
+  const configs = buildCategoryConfigs();
 
   return (
-    <main style={{ width: '100%', minHeight: '100vh', position: 'relative' }}>
-      <FloatingElements />
-      <Hero />
-      
-      <section className="section-padding">
-        {sections.map((section, index) => (
-          <ContentSection 
-            key={index}
-            index={index}
-            title={section.title}
-            description={section.description}
-          />
-        ))}
-      </section>
-    </main>
+    <div className="page-shell">
+      <Hero>
+        <SiteHeader />
+      </Hero>
+      <FloatingCategoryCards configs={configs} />
+    </div>
   );
 }

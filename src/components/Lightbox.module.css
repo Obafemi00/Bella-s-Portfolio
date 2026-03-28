@@ -1,0 +1,99 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(6, 6, 6, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1rem, 4vw, 2.5rem);
+  opacity: 0;
+}
+
+.panel {
+  position: relative;
+  max-width: min(1180px, 96vw);
+  max-height: 90dvh;
+  opacity: 0;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 88dvh;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.65);
+}
+
+.close {
+  position: absolute;
+  top: -2.75rem;
+  right: 0;
+  background: transparent;
+  border: none;
+  color: rgba(245, 245, 245, 0.75);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0.35rem 0;
+}
+
+.prev,
+.next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+}
+
+.prev {
+  left: -3.25rem;
+}
+
+.next {
+  right: -3.25rem;
+}
+
+@media (max-width: 900px) {
+  .prev {
+    left: 0.25rem;
+  }
+  .next {
+    right: 0.25rem;
+  }
+
+  .close {
+    top: -2rem;
+  }
+}
+
+.prev::after,
+.next::after {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin: 0 auto;
+  border-top: 2px solid rgba(245, 245, 245, 0.85);
+  border-right: 2px solid rgba(245, 245, 245, 0.85);
+}
+
+.prev::after {
+  transform: rotate(-135deg);
+  margin-left: 14px;
+}
+
+.next::after {
+  transform: rotate(45deg);
+  margin-right: 14px;
+}

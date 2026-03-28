@@ -1,25 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600;700&display=swap');
-
-@font-face {
-  font-family: 'Recoleta';
-  src: local('Outfit'), sans-serif;
-  font-weight: bold;
-}
-
-@font-face {
-  font-family: 'Satoshi';
-  src: local('Inter'), sans-serif;
-  font-weight: normal;
-}
-
 :root {
-  --primary: #FFC5D3;
-  --bg-dark: #0a0a0a;
-  --text-main: #f0f0f0;
-  --text-muted: #a0a0a0;
-  
-  --glass-bg: rgba(255, 197, 211, 0.05);
-  --glass-border: rgba(255, 197, 211, 0.1);
+  --accent: #ffc5d3;
+  --bg: #0c0c0c;
+  --bg-elevated: #141414;
+  --text: #f5f5f5;
+  --text-muted: rgba(245, 245, 245, 0.62);
+  --shadow-soft: 0 24px 48px rgba(0, 0, 0, 0.45);
+  --shadow-card: 0 18px 40px rgba(0, 0, 0, 0.35);
+  --font-body: "Satoshi", system-ui, -apple-system, sans-serif;
+  /* Editorial serif stack (no build-time Google fetch); add Recoleta via /public/fonts if licensed */
+  --font-fraunces: ui-serif, Georgia, "Times New Roman", Times, serif;
+}
+
+/* Optional: add licensed Recoleta files to /public/fonts for brand-perfect headings. */
+@font-face {
+  font-family: "Recoleta";
+  src: url("/fonts/recoleta.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
 }
 
 * {
@@ -28,19 +25,29 @@
   padding: 0;
 }
 
-body, html {
-  background-color: var(--bg-dark);
-  color: var(--text-main);
-  font-family: 'Satoshi', 'Inter', sans-serif;
-  overflow-x: hidden;
-  width: 100vw;
-  scroll-behavior: smooth;
+html {
+  overflow-x: clip;
+  scrollbar-gutter: stable;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Recoleta', 'Outfit', serif;
-  font-weight: bold;
-  letter-spacing: -0.02em;
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body), var(--font-fraunces), system-ui, sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Recoleta", var(--font-fraunces), Georgia, "Times New Roman",
+    serif;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
 }
 
 a {
@@ -48,45 +55,91 @@ a {
   text-decoration: none;
 }
 
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+::selection {
+  background: var(--accent);
+  color: #111;
 }
 
-.animate-fade-in {
-  animation: fadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.site-logo {
+  filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.35));
 }
 
-.delay-1 { animation-delay: 0.2s; }
-.delay-2 { animation-delay: 0.4s; }
+.page-shell {
+  min-height: 100dvh;
+  position: relative;
+}
 
-/* Sections */
-.section-padding {
-  padding: 8rem 5%;
-  max-width: 1400px;
+.page-main {
+  padding: 2.25rem 6vw 5rem;
+  max-width: 1540px;
   margin: 0 auto;
 }
 
-/* Glassmorphism Cards */
-.glass-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-  border-radius: 24px;
-  padding: 3rem;
-  transition: transform 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
+@media (max-width: 640px) {
+  .page-main {
+    padding: 1.75rem 5vw 4rem;
+  }
 }
 
-.glass-card:hover {
-  transform: translateY(-5px);
-  background: rgba(255, 197, 211, 0.08);
-  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+.page-title {
+  font-size: clamp(2.25rem, 5vw, 3.75rem);
+  margin-bottom: 0.35rem;
 }
 
-/* Custom Selection */
-::selection {
-  background: var(--primary);
-  color: var(--bg-dark);
+.page-lede {
+  font-family: var(--font-body), system-ui, sans-serif;
+  color: var(--text-muted);
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  max-width: 36rem;
+  margin-bottom: 2.75rem;
+  line-height: 1.55;
+}
+
+.masonry {
+  column-count: 3;
+  column-gap: 1.25rem;
+}
+
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 1.25rem;
+}
+
+/* Avoid motion-grid flash before GSAP mounts */
+[data-project-item] {
+  opacity: 0;
+}
+
+@media (max-width: 1100px) {
+  .masonry {
+    column-count: 2;
+  }
+}
+
+@media (max-width: 560px) {
+  .masonry {
+    column-count: 1;
+  }
+}
+
+.pill-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.65rem 1.1rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.pill-back:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
