@@ -26,8 +26,7 @@ export default function CategoryVideoPage({ title, slug }: Props) {
           </Link>
           <h1 className="page-title">{title}</h1>
           <p className="page-lede">
-            Looping, muted previews. Each piece runs only while in view to keep
-            playback smooth sitewide.
+            Bringing ideas to life through hand-crafted frame-by-frame and dimensional motion
           </p>
         </SectionReveal>
 
