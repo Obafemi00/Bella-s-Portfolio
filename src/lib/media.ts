@@ -101,7 +101,9 @@ export function getAllMedia(): MediaItem[] {
 }
 
 export function getBrandingImages(): MediaItem[] {
-  return getMediaByCategory("branding").filter((m) => m.kind === "image");
+  return getMediaByCategory("branding").filter(
+    (m) => m.kind === "image" || m.kind === "video",
+  );
 }
 
 /** Video-only selections for motion categories (2D / 3D / AI). */

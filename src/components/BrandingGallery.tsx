@@ -5,6 +5,7 @@ import type { MediaItem } from "@/lib/mediaTypes";
 import ImageCard from "@/components/ImageCard";
 import Lightbox from "@/components/Lightbox";
 import ProjectGrid from "@/components/ProjectGrid";
+import VideoCard from "@/components/VideoCard";
 
 type Props = {
   items: MediaItem[];
@@ -14,7 +15,8 @@ export default function BrandingGallery({ items }: Props) {
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
 
-  const slides = items.map((item) => ({
+  const imageItems = items.filter((item) => item.kind === "image");
+  const slides = imageItems.map((item) => ({
     src: item.url,
     alt: item.filename,
   }));
@@ -22,16 +24,25 @@ export default function BrandingGallery({ items }: Props) {
   return (
     <>
       <ProjectGrid>
-        {items.map((item, i) => (
+        {items.map((item) => (
           <div key={item.id} className="masonry-item">
-            <ImageCard
-              src={item.url}
-              alt={item.filename}
-              onOpen={() => {
-                setIndex(i);
-                setOpen(true);
-              }}
-            />
+            {item.kind === "video" ? (
+              <VideoCard src={item.url} />
+            ) : (
+              <ImageCard
+                src={item.url}
+                alt={item.filename}
+                onOpen={() => {
+                  const imageIndex = imageItems.findIndex(
+                    (image) => image.id === item.id,
+                  );
+                  if (imageIndex >= 0) {
+                    setIndex(imageIndex);
+                    setOpen(true);
+                  }
+                }}
+              />
+            )}
           </div>
         ))}
       </ProjectGrid>
